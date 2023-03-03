@@ -19,6 +19,7 @@ import { stateType } from "../../types";
 
 function StudentRegistration() {
   const [state, setState] = useState<stateType>({
+    // key for handling the form data
     formData: {
       name: { value: "", error: false, required: true, type: "text" },
       age: { value: "", error: false, required: true, type: "number" },
@@ -44,6 +45,7 @@ function StudentRegistration() {
         url: "",
       },
     },
+    // key for storing details of student
     details: {
       name: "",
       age: "",
@@ -53,22 +55,24 @@ function StudentRegistration() {
     },
   });
 
+  // fn for handling any input of form
   const changeHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
     key: string
   ) => {
     let inputType = state.formData[key].type;
     let value = e.currentTarget.value;
-    if (key in state.formData) {
+    // checking if the key exists in formData (required in typescript)
+    if (key in state.formData) { 
       if (
         inputType === "file" &&
         e.currentTarget.files &&
         e.currentTarget.files[0]
       ) {
-        const file = e.currentTarget.files![0];
         state.formData[key].files = e.currentTarget.files!;
         state.formData[key].value = value;
-        state.formData[key].url = URL.createObjectURL(file);
+        // creating url for image to render it afterwards
+        state.formData[key].url = URL.createObjectURL(e.currentTarget.files![0]);
       } else if (inputType === "number") {
         if (value.match(/^\d+$/)) {
           state.formData[key].value = value;
@@ -103,9 +107,11 @@ function StudentRegistration() {
         }
       }
     });
+    // checking if any object with error property=true exists
     let errorExists = Object.values(formObj).every(
       (ele) => ele.error === false
     );
+    // setting the details if no error found
     if (errorExists) {
       state.details = {
         name: formObj.name.value,
@@ -115,10 +121,10 @@ function StudentRegistration() {
         idProof: formObj.idProof.files![0].name,
       };
     }
-
     setState({ ...state, formData: formObj });
   };
 
+  // fn to convert file size to kb
   const convertFileSize = (size: number) => {
     if (size > 1024) {
       return size / 1024;
@@ -131,6 +137,7 @@ function StudentRegistration() {
       <Typography align="center" variant="h4" gutterBottom>
         Register
       </Typography>
+      {/* using ternary operator  to conditionally render form or details */}
         {Object.values(state.details).every((ele) => ele !== "") ? (
           <Card className="details">
             <Typography>Name:{state.details.name}</Typography>
@@ -207,8 +214,8 @@ function StudentRegistration() {
                 />
               </RadioGroup>
             </FormControl>
-            <FormGroup color="warning">
-              <InputLabel color="warning">Upload a photo</InputLabel>
+            <FormGroup>
+              <InputLabel>Upload a photo</InputLabel>
               <OutlinedInput
                 value={state.formData.image.value}
                 type="file"
