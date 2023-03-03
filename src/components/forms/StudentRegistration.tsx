@@ -131,9 +131,8 @@ function StudentRegistration() {
       <Typography align="center" variant="h4" gutterBottom>
         Register
       </Typography>
-      <Card className="details">
         {Object.values(state.details).every((ele) => ele !== "") ? (
-          <>
+          <Card className="details">
             <Typography>Name:{state.details.name}</Typography>
             <Typography>Age:{state.details.age}</Typography>
             <Typography>Qualification:{state.details.qualification}</Typography>
@@ -146,7 +145,7 @@ function StudentRegistration() {
               />
             </Box>
             <Typography>IdProof:{state.details.idProof}</Typography>
-          </>
+          </Card>
         ) : (
           <form
             className="registration"
@@ -254,7 +253,6 @@ function StudentRegistration() {
             </Button>
           </form>
         )}
-      </Card>
     </Card>
   );
 }
